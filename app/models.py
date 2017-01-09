@@ -214,16 +214,7 @@ class Task(db.Model):
     end_time = db.Column(db.DateTime)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     priority = db.Column(db.Integer)
-
-
-class FDMMachine(db.Model):
-    __tablename__ = 'fdm_machines'
-    ip_address = db.Column(db.String(64), primary_key=True)
-    type = db.Column(db.Integer)
-    x_size = db.Column(db.Integer)
-    y_size = db.Column(db.Integer)
-    z_size = db.Column(db.Integer)
-    material = db.Column(db.Integer)
+    progress = db.Column(db.Integer)
 
 
 class Post(db.Model):
