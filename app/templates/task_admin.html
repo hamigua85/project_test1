@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Flasky{% endblock %}
+{% block page_content %}
+    <div class="page-header">
+        {% if current_user.is_authenticated %}
+            <h3>Welcome,{{ current_user.username }}!</h3>
+            <span class="chart" data-percent="86">
+                <span class="percent"></span>
+            </span>
+            <span class="btn js_update">Update chart</span>
+            <h3>{{ online_machines }}</h3>
+        {% else %}
+            <h2>Welcome to Unity3D Cloud Factory.</h2>
+            <p>
+                <a href="{{ url_for('auth.register') }}">
+                Click here to register
+                </a>
+            </p>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='jquery-2.0.3.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='jquery.easypiechart.js') }}"></script>
+	<script>
+    function myInterval(){
+        $.getJSON("/task", { cmd: 'machine_info'},
+        function (data) { 
+            var d = data;
+         });
+    }
+    $(window).ready(function () {
+        setInterval("myInterval()", 2000);
+        })
+	$(function() {
+		$('.chart').easyPieChart({
+            lineCap: 'butt',
+            lineWidth: 20,
+            trackWidth: 16,
+            trackColor: '#ace',
+            scaleColor: false,
+            size:110,
+            onStep: function (from, to, percent_1) {
+                this.el.children[0].innerHTML = Math.round(percent_1*2.4) + "\xb0C";
+            }
+		});
+		var chart = window.chart = $('.chart').data('easyPieChart');
+		$('.js_update').on('click', function() {
+			chart.update(Math.random()*100);
+		});
+	});
+	</script>
+{% endblock %}
